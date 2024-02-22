@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import personService from './services/persons';
 
 
 const App = () => {
@@ -9,28 +10,38 @@ const App = () => {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
+    personService.getAll()
+      .then(phonebookPersons => {
+        setPersons(phonebookPersons);
       });
   }, []);
 
   const addName = (event) => {
     event.preventDefault();
-    const nameExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase());
-
-    if (nameExists) {
+    const personExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase());
+  
+    if (personExists) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      const nameObject = {
-        name: newName,
-        number: newNumber,
-        id: persons.length + 1,
-      };
-      setPersons(persons.concat(nameObject));
-      setNewName('');
-      setNewNumber('');
+      const newPerson = { name: newName, number: newNumber };
+      personService.create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName('');
+          setNewNumber('');
+        });
+    }
+  };
+
+  const deletePerson = (id) => {
+    const person = persons.find(p => p.id === id);
+    const confirmDelete = window.confirm(`Delete ${person.name}?`);
+
+    if (confirmDelete) {
+      personService.remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id));
+        })
     }
   };
 
@@ -55,7 +66,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onDelete={deletePerson} />
     </div>
   );
 };
@@ -78,11 +89,18 @@ const PersonForm = ({ addName, newName, handleNameChange, newNumber, handleNumbe
   </form>
 );
 
-const Person = ({ person }) => <li>{person.name} {person.number}</li>;
+const Person = ({ person, onDelete }) => (
+  <li>
+    {person.name} {person.number}
+    <button onClick={onDelete}>delete</button>
+  </li>
+);
 
-const Persons = ({ persons }) => (
+const Persons = ({ persons, onDelete }) => (
   <ul>
-    {persons.map(person => <Person key={person.id} person={person} />)}
+    {persons.map(person =>
+      <Person key={person.id} person={person} onDelete={() => onDelete(person.id)} />
+    )}
   </ul>
 );
 
