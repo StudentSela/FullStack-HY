@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 
 const App = () => {
@@ -6,6 +7,14 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data);
+      });
+  }, []);
 
   const addName = (event) => {
     event.preventDefault();
@@ -38,7 +47,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
-      <PersonForm 
+      <PersonForm
         addName={addName}
         newName={newName}
         handleNameChange={handleNameChange}
