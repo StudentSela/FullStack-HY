@@ -33,6 +33,8 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: green;
+  font-style: italic;
 }
 
 button {
@@ -46,6 +48,22 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
+.person-item {
+  color: grey;
+  padding-top: 3px;
+  font-size: 15px;
+}
+.notification {
+  color: red;
+  background: green;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
 button:hover {
   border-color: #646cff;
 }
