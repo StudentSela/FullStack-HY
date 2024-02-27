@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import personService from './services/persons';
+import './index.css';
 
 
 const App = () => {
@@ -8,6 +8,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll()
@@ -29,9 +30,13 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
-        });
-    }
-  };
+          setErrorMessage(`Added ${newName}`);
+          setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000); 
+      }); 
+  } 
+}; 
 
   const deletePerson = (id) => {
     const person = persons.find(p => p.id === id);
@@ -41,9 +46,13 @@ const App = () => {
       personService.remove(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id));
+          setErrorMessage(`${person.name} has been removed from the phonebook.`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         })
     }
-  };
+  }
 
   const handleNameChange = (event) => setNewName(event.target.value);
   const handleNumberChange = (event) => setNewNumber(event.target.value);
@@ -56,6 +65,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
@@ -90,7 +100,7 @@ const PersonForm = ({ addName, newName, handleNameChange, newNumber, handleNumbe
 );
 
 const Person = ({ person, onDelete }) => (
-  <li>
+  <li className="person-item">
     {person.name} {person.number}
     <button onClick={onDelete}>delete</button>
   </li>
@@ -103,5 +113,17 @@ const Persons = ({ persons, onDelete }) => (
     )}
   </ul>
 );
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  );
+};
 
 export default App;
