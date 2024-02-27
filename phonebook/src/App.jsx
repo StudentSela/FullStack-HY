@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import personService from './services/persons';
 import './index.css';
 
-
+// Added text so github recognizes changes I made
 const App = () => {
   const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '+3589534053', id: 1 }]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService.getAll()
@@ -20,9 +20,12 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
     const personExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase());
-  
+
     if (personExists) {
-      alert(`${newName} is already added to phonebook`);
+      setNotification(`${newName} is already added to phonebook`);
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
     } else {
       const newPerson = { name: newName, number: newNumber };
       personService.create(newPerson)
@@ -30,27 +33,25 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
-          setErrorMessage(`Added ${newName}`);
+          setNotification(`Added ${newName}`);
           setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000); 
-      }); 
-  } 
-}; 
+            setNotification(null);
+          }, 5000);
+        }); 
+    } 
+  }; 
 
   const deletePerson = (id) => {
     const person = persons.find(p => p.id === id);
-    const confirmDelete = window.confirm(`Delete ${person.name}?`);
-
-    if (confirmDelete) {
+    if (window.confirm(`Delete ${person.name}?`)) {
       personService.remove(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id));
-          setErrorMessage(`${person.name} has been removed from the phonebook.`);
+          setNotification(`Deleted ${person.name}`);
           setTimeout(() => {
-            setErrorMessage(null);
+            setNotification(null);
           }, 5000);
-        })
+        });
     }
   }
 
@@ -65,7 +66,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification message={notification} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
@@ -120,10 +121,10 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div className="error">
+    <div className="notification">
       {message}
     </div>
   );
-};
+}
 
 export default App;
