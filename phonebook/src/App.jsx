@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import personService from './services/persons';
 import './index.css';
 
-// Added text so github recognizes changes I made
+// Comment
 const App = () => {
   const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '+3589534053', id: 1 }]);
   const [newName, setNewName] = useState('');
