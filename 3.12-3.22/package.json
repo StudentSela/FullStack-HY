@@ -1,0 +1,38 @@
+{
+  "name": "notebackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint": "eslint .",
+    "test": "test1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StudentSela/FullStack-HY.git"
+  },
+  "author": "StudentSela",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StudentSela/FullStack-HY/issues"
+  },
+  "homepage": "https://github.com/StudentSela/FullStack-HY#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.2.0",
+    "@stylistic/eslint-plugin-js": "^2.1.0",
+    "eslint": "^8.40.0",
+    "eslint-plugin-react": "^7.31.11",
+    "globals": "^15.2.0"
+  }
+}
