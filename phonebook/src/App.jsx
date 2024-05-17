@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import personService from './services/persons';
 import './index.css';
 
-// Comment
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '+3589534053', id: 1 }]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
@@ -22,7 +21,7 @@ const App = () => {
     const personExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase());
 
     if (personExists) {
-      setNotification(`${newName} is already added to phonebook`);
+      setNotification({ message: `${newName} is already added to phonebook`, type: 'error' });
       setTimeout(() => {
         setNotification(null);
       }, 5000);
@@ -33,13 +32,19 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName('');
           setNewNumber('');
-          setNotification(`Added ${newName}`);
+          setNotification({ message: `Added ${newName}`, type: 'success' });
           setTimeout(() => {
             setNotification(null);
           }, 5000);
-        }); 
-    } 
-  }; 
+        })
+        .catch(error => {
+          setNotification({ message: error, type: 'error' });
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        });
+    }
+  };
 
   const deletePerson = (id) => {
     const person = persons.find(p => p.id === id);
@@ -47,7 +52,7 @@ const App = () => {
       personService.remove(id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== id));
-          setNotification(`Deleted ${person.name}`);
+          setNotification({ message: `Deleted ${person.name}`, type: 'success' });
           setTimeout(() => {
             setNotification(null);
           }, 5000);
@@ -121,8 +126,8 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div className="notification">
-      {message}
+    <div className={message.type === 'error' ? 'error-notification' : 'notification'}>
+      {message.message}
     </div>
   );
 }
