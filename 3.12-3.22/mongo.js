@@ -9,7 +9,7 @@ const password = process.argv[2];
 const name = process.argv[3];
 const number = process.argv[4];
 
-const url = 'mongodb+srv://etupasel22:xb5hZpt9vf8GkuqE@fullstack.0ke35f4.mongodb.net/?retryWrites=true&w=majority&appName=Fullstack'
+const url = 'mongodb+srv://etupasel22:<Password>@fullstack.0ke35f4.mongodb.net/?retryWrites=true&w=majority&appName=Fullstack'
 
 mongoose.set('strictQuery', false);
 mongoose.connect(url);
