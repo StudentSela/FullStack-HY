@@ -1,0 +1,21 @@
+### Test POST /eka testi
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Blogipostaus",
+  "author": "Jarkko Jalkamies",
+  "url": "http://example.com/Blogipostaus",
+  "likes": 10
+}
+
+### Test POST /toka testi
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Turhaa puheenhelinaa",
+  "author": "Pormestari",
+  "url": "http://example.com/Turhaa-puheenhelinaa",
+  "likes": 5
+}
